@@ -33,7 +33,7 @@ _A Doxygen documentation is provided and can be generated for more information a
 
 #### Use case 1:
 Considering the following task:
-```
+```cpp
 //.hpp
 struct MyTask : public concurrency::Task
 {
@@ -49,7 +49,7 @@ void MyTask::run()
 ```
 
 We want to execute 30 tasks with a threads pool of 10 threads:
-```
+```cpp
 // Create 30 tasks
 std::vector<MyTask> tasks_to_execute;
 for(std::size_t i = 0; i < 30; ++i)
@@ -79,7 +79,7 @@ std::cout << "Thread pool stopped !" << std::endl;
 Now let's consider we have 3 tasks `t1`, `t2` and `t3` to execute. And `t3` must wait that `t2` has finished before being started.
 
 We can define a task that will notify when its execution is completed:
-```
+```cpp
 //.h
 struct MyOtherTask : public concurrency::Task
 {
@@ -111,7 +111,7 @@ void MyOtherTask::run()
 }
 ```
 Then we can apply the precedence between `t2` and `t3` as follows:
-```
+```cpp
 // Create 3 tasks
 MyTask t1;
 MyOtherTask t2; // is able to notify when it finished
