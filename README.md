@@ -14,7 +14,7 @@ This is a C++ thread pool implementation based on the standard library requiring
 
 - Tasks can be added to the `ThreadPool` at anytime, whether it is started or not.
 
-- When started, the `ThreadPool` creates the required number of threads and makes them spin. If there a pending task in the queue and a thread is available, the task will be assigned to this thread and removed from the queue.
+- When started, the `ThreadPool` creates the required number of threads and makes them spin. If there is a pending task in the queue and a thread is available, the task will be assigned to this thread and removed from the queue.
 
 - After being stopped, the `ThreadPool` can be safely restarted. If already started, trying to start again will have no effect.
 
