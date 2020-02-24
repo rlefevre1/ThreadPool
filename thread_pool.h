@@ -7,11 +7,12 @@
  * \author Raphaël Lefèvre
 */
 
-#include <queue>      // std::queue
-#include <vector>     // std::vector
-#include <thread>     // std::thread
-#include <atomic>     // std::atomic
-#include <mutex>      // std::mutex
+#include <queue>              // std::queue
+#include <vector>             // std::vector
+#include <thread>             // std::thread
+#include <atomic>             // std::atomic
+#include <mutex>              // std::mutex
+#include <condition_variable> // std::condition_variable
 
 /*!
  * \namespace concurrency
@@ -49,6 +50,8 @@ namespace concurrency
 
             std::size_t running_tasks_count_;
             mutable std::mutex rtc_guardian_;
+        
+            std::condition_variable thread_spin_cv_;
 
         public:
             /*!

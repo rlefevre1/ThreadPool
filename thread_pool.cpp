@@ -30,6 +30,7 @@ namespace concurrency
     void ThreadPool::stop(STOP_POLICY sp)
     {
         alive_ = false;
+        thread_spin_cv_.notify_all();
 
         if(sp == SYNC && !threads_pool_.empty())
         {
@@ -51,6 +52,8 @@ namespace concurrency
     {
         std::lock_guard<std::mutex> locker(guardian_);
         tasks_pool_.push(t);
+        if(alive_)
+            thread_spin_cv_.notify_one();
     }
     void ThreadPool::clear()
     {
@@ -90,17 +93,17 @@ namespace concurrency
         Task * task;
         while(alive_)
         {
-            guardian_.lock();
+            std::unique_lock<std::mutex> lk(guardian_);
             if(tasks_pool_.empty())
             {
-                guardian_.unlock();
-                std::this_thread::yield();
+                thread_spin_cv_.wait(lk);
+                lk.unlock();
             }
             else
             {
                 task = tasks_pool_.front();
                 tasks_pool_.pop();
-                guardian_.unlock();
+                lk.unlock();
                 this->inc();
                 task->run();
                 this->dec();
