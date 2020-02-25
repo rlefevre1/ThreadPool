@@ -24,7 +24,7 @@ This is a C++ thread pool implementation based on the standard library requiring
     - `SYNC` (synchronous) : Send the termination command and wait until all the workers are terminated (blocking). This is the default value.
     - `ASYNC` (asynchronous) : Send the termination command and directly returns (non-blocking), delegating the responsibility of the threads termination synchronization to the user (in this case, `ThreadPool::joinAll()` must be called when the running tasks are required to be completed).
 
-- If a `ThreadPool` is asynchronously stopped and then restarted (without previously calling `joinAll()`) while there are still running tasks, the threads termination synchronization will automatically be performed before the restart as if `joinAll()` was called.
+- If a `ThreadPool` is asynchronously stopped and then restarted (without previously calling `joinAll()`) while there are still running tasks, the threads termination synchronization will automatically be performed before the restart as if `joinAll()` were called.
 
 _A Doxygen documentation is provided and can be generated for more information about the full available features_
 
