@@ -94,20 +94,19 @@ namespace concurrency
         while(alive_)
         {
             std::unique_lock<std::mutex> lk(guardian_);
-            if(tasks_pool_.empty())
-            {
-                thread_spin_cv_.wait(lk);
-                lk.unlock();
-            }
-            else
+            thread_spin_cv_.wait(lk, [&](){return !alive_ || !tasks_pool_.empty();});
+            
+            if(!tasks_pool_.empty())
             {
                 task = tasks_pool_.front();
                 tasks_pool_.pop();
                 lk.unlock();
+
                 this->inc();
                 task->run();
                 this->dec();
             }
+            // No need to "else lk.unlock()" here since the std::unique_lock will already release the mutex at destruction.
         }
     }
     void ThreadPool::clean_up()
