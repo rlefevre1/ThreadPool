@@ -29,7 +29,10 @@ namespace concurrency
     }
     void ThreadPool::stop(STOP_POLICY sp)
     {
-        alive_ = false;
+        {
+            std::lock_guard<std::mutex> locker(guardian_); // Lock to make the condition_variable's predicate evaluation safe (let it finish and return before the wait() releases the mutex -> Prevent threads to miss the notify_all()).
+            alive_ = false;
+        }
         thread_spin_cv_.notify_all();
 
         if(sp == SYNC && !threads_pool_.empty())

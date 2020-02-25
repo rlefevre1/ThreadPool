@@ -43,7 +43,7 @@ namespace concurrency
             const std::size_t threads_count_;
 
             std::queue<Task*> tasks_pool_;
-            mutable std::mutex guardian_; // mutual exclusion for the tasks pool access
+            mutable std::mutex guardian_;
 
             std::vector<std::thread> threads_pool_;
             std::atomic<bool> alive_;
