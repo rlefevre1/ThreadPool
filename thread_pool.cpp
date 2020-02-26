@@ -97,7 +97,9 @@ namespace concurrency
             std::unique_lock<std::mutex> lk(guardian_);
             thread_spin_cv_.wait(lk, [&](){return !alive_ || !tasks_pool_.empty();});
             
-            if(!tasks_pool_.empty())
+            // At this point, if "alive_ == true" then tasks_pool_ cannot be empty (the lock was reacquired before evaluating the predicate).
+
+            if(alive_)
             {
                 task = tasks_pool_.front();
                 tasks_pool_.pop();
