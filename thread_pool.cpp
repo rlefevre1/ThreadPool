@@ -77,12 +77,10 @@ namespace concurrency
     }
     bool ThreadPool::is_running() const
     {
-        std::lock_guard<std::mutex> locker(rtc_guardian_);
         return running_tasks_count_;
     }
     std::size_t ThreadPool::running() const
     {
-        std::lock_guard<std::mutex> locker(rtc_guardian_);
         return running_tasks_count_;
     }
     void ThreadPool::waitForIdle() const
@@ -105,9 +103,9 @@ namespace concurrency
                 tasks_pool_.pop();
                 lk.unlock();
 
-                this->inc();
+                ++running_tasks_count_;
                 task->run();
-                this->dec();
+                --running_tasks_count_;
             }
             // No need to "else lk.unlock()" here since the std::unique_lock will already release the mutex at destruction.
         }
@@ -120,15 +118,5 @@ namespace concurrency
                 th.join();
         }
         threads_pool_.clear();
-    }
-    void ThreadPool::inc()
-    {
-        std::lock_guard<std::mutex> locker(rtc_guardian_);
-        ++running_tasks_count_;
-    }
-    void ThreadPool::dec()
-    {
-        std::lock_guard<std::mutex> locker(rtc_guardian_);
-        --running_tasks_count_;
     }
 }

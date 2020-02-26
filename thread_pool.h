@@ -48,8 +48,7 @@ namespace concurrency
             std::vector<std::thread> threads_pool_;
             std::atomic<bool> alive_;
 
-            std::size_t running_tasks_count_;
-            mutable std::mutex rtc_guardian_;
+            std::atomic<std::size_t> running_tasks_count_;
         
             std::condition_variable thread_spin_cv_;
 
@@ -141,8 +140,6 @@ namespace concurrency
         private:
             void spin(); // Each thread execute the spin() function with its own control block.
             void clean_up();
-            void inc();
-            void dec();
     };
 }
 
